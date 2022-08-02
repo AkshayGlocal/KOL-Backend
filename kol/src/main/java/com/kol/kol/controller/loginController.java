@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @ComponentScan
 @Controller
 
-public class welcome {
+public class loginController {
     @GetMapping("api")
     public String getLoginpage(){
         return "login";
