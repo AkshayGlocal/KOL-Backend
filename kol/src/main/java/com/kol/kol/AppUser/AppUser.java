@@ -43,8 +43,8 @@ public class AppUser implements UserDetails{
     @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
     
-    private Boolean locked;
-    private Boolean enabled;
+    private Boolean locked = false;
+    private Boolean enabled = true;
      
 
 
@@ -79,7 +79,7 @@ public class AppUser implements UserDetails{
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
@@ -89,13 +89,22 @@ public class AppUser implements UserDetails{
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
         return enabled;
     }
+
+    public AppUser(String username2, String email2, String password2, AppUserRole analyst) {
+        this.username= username2;
+        this.email = email2;
+        this.password = password2;
+        this.appUserRole = analyst;
+    }
+
+    
 
     
     
