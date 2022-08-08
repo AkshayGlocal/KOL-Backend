@@ -36,4 +36,5 @@ public class KolApplication {
 	 		appUserService.addRoleToAppUser("johnsmith@glocalmind.com", "ROLE_ANALYST");
 		};
 	}
+	
 }
