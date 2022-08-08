@@ -25,13 +25,15 @@ public class KolApplication {
 			appUserService.saveRole(new Role(null,"ROLE_ADMIN"));
 			appUserService.saveRole(new Role(null,"ROLE_SUPER_ADMIN"));
 
-			appUserService.saveAppUser(new AppUser(null,"akshay","akshay.a@glocalmind.com","pass",new ArrayList<>()));
-			appUserService.saveAppUser(new AppUser(null,"suraj","suraj.sharma@glocalmind.com","pass",new ArrayList<>()));
-			appUserService.saveAppUser(new AppUser(null,"deepak","deepak.b@glocalmind.com","pass",new ArrayList<>()));
+			appUserService.saveAppUser(new AppUser(null,"akshay","akshay.a@glocalmind.com","glocalmind",new ArrayList<>()));
+			appUserService.saveAppUser(new AppUser(null,"suraj","suraj.s@glocalmind.com","glocalmind",new ArrayList<>()));
+			appUserService.saveAppUser(new AppUser(null,"deepak","deepak.b@glocalmind.com","glocalmind",new ArrayList<>()));
+			appUserService.saveAppUser(new AppUser(null,"johnsmith","johnsmith@glocalmind.com","glocalmind",new ArrayList<>()));
 
 			appUserService.addRoleToAppUser("akshay.a@glocalmind.com", "ROLE_SUPER_ADMIN");
-			appUserService.addRoleToAppUser("suraj.sharma@glocalmind.com", "ROLE_ANALYST");
+			appUserService.addRoleToAppUser("suraj.s@glocalmind.com", "ROLE_ADMIN");
 			appUserService.addRoleToAppUser("deepak.b@glocalmind.com", "ROLE_ADMIN");
+	 		appUserService.addRoleToAppUser("johnsmith@glocalmind.com", "ROLE_ANALYST");
 		};
 	}
 }
