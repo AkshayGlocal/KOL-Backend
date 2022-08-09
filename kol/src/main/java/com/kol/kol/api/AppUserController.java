@@ -33,6 +33,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kol.kol.model.AppUser;
+import com.kol.kol.model.RequestProfile;
 import com.kol.kol.model.Role;
 import com.kol.kol.service.AppUserService;
 
@@ -59,6 +60,13 @@ public class AppUserController {
             appUserService.getAppUsers()
         );
     }
+    ///profile/request
+    @PostMapping(path="/profile/request")
+    public void RequestProfile(@RequestBody RequestProfile requestProfile){
+        log.info("in controller");
+        appUserService.saveRequestProfile(requestProfile);
+    }
+
     @PostMapping(path = "/user/save")
     public ResponseEntity<AppUser>saveUser(
         @RequestBody AppUser appUser
@@ -105,6 +113,7 @@ public class AppUserController {
                 AppUser appUser = appUserService.getAppUser(username);
                 String access_token = JWT.create()
                 .withSubject(appUser.getEmail())
+                //2 months -> 87602
                 .withExpiresAt(new Date(System.currentTimeMillis()+87602*60*1000))
                 .withIssuer(request.getRequestURI().toString())
                 .withClaim("roles", appUser.getRoles().stream().
