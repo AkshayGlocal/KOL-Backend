@@ -52,6 +52,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(path="/api/v1")
 public class AppUserController {
     private final AppUserService appUserService;
+    
     @GetMapping(path = "/users")
     public ResponseEntity<List<AppUser>>getUsers(){
         return ResponseEntity.ok().body(
@@ -104,7 +105,7 @@ public class AppUserController {
                 AppUser appUser = appUserService.getAppUser(username);
                 String access_token = JWT.create()
                 .withSubject(appUser.getEmail())
-                .withExpiresAt(new Date(System.currentTimeMillis()+10*60*1000))
+                .withExpiresAt(new Date(System.currentTimeMillis()+87602*60*1000))
                 .withIssuer(request.getRequestURI().toString())
                 .withClaim("roles", appUser.getRoles().stream().
                 map(Role::getName).collect(Collectors.toList()))

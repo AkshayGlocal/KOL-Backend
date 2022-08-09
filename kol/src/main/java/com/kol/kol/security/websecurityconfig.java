@@ -52,7 +52,7 @@ public class websecurityconfig extends WebSecurityConfigurerAdapter{
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/v1/login","/api/v1/refresh/token").permitAll();
         http.authorizeRequests().antMatchers("/api/v1/eg").hasAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers("/api/v1/users").hasAuthority("ROLE_SUPER_ADMIN");
+        http.authorizeRequests().antMatchers("/api/v1/users").hasAuthority("ROLE_ANALYST");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilterBefore(new CustomAuthorizationfilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilter(customAuthenticationFilter);
@@ -66,13 +66,13 @@ public class websecurityconfig extends WebSecurityConfigurerAdapter{
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://localhost:3000/analyst?size=n_20_n"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","OPTIONS"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
+  
 
     
 }
