@@ -7,6 +7,9 @@ import javax.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 
 @Entity 
@@ -20,6 +23,8 @@ public class RequestProfile {
     private String username;
     private String createdAt;
     private String kolProfileId;
+    private LocalDateTime approvedAt;
+    private String token;
 
 
     public RequestProfile(String username, String createdAt, String kolProfileId) {

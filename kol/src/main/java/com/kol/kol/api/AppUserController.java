@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -60,10 +62,20 @@ public class AppUserController {
             appUserService.getAppUsers()
         );
     }
-    ///profile/request
+    @GetMapping(path="/approve")
+    public ResponseEntity<?> ApproveRequestProfile(@RequestParam("token") String token){
+       int n= appUserService.updateApprovedAtToken(token);
+       log.info("int->{}",n);
+       return ResponseEntity.ok().build();
+    }
+
+
+
     @PostMapping(path="/profile/request")
     public void RequestProfile(@RequestBody RequestProfile requestProfile){
         log.info("in controller");
+        String token = UUID.randomUUID().toString();
+        requestProfile.setToken(token);
         appUserService.saveRequestProfile(requestProfile);
     }
 

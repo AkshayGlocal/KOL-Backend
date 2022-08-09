@@ -1,5 +1,6 @@
 package com.kol.kol.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.kol.kol.repo.RoleRepo;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice.Local;
 
 
 @Service
@@ -39,6 +41,10 @@ public class AppUserServiceImpl implements AppUserService,UserDetailsService{
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RequestProfileRepo requestProfileRepo;
 
+    @Override
+    public int updateApprovedAtToken(String token) {
+        return requestProfileRepo.updateApprovedAt(token, LocalDateTime.now());
+    }
     @Override
     public RequestProfile saveRequestProfile(RequestProfile requestProfile) {
         log.info("KolProfileID-> "+requestProfile.getKolProfileId()+" saved");
@@ -95,6 +101,8 @@ public class AppUserServiceImpl implements AppUserService,UserDetailsService{
         log.info("fetching all users");
         return appUserRepo.findAll();
     }
+
+    
 
   
 

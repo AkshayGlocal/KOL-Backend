@@ -15,4 +15,7 @@ public interface AppUserService {
     // TODO implement Pageable to optimize
     List<AppUser> getAppUsers();
     RequestProfile saveRequestProfile(RequestProfile requestProfile);
+    int updateApprovedAtToken (String token);
+
+
 }
