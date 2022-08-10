@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -33,6 +35,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kol.kol.model.AppUser;
+import com.kol.kol.model.RequestProfile;
 import com.kol.kol.model.Role;
 import com.kol.kol.service.AppUserService;
 
@@ -59,6 +62,23 @@ public class AppUserController {
             appUserService.getAppUsers()
         );
     }
+    @GetMapping(path="/approve")
+    public ResponseEntity<?> ApproveRequestProfile(@RequestParam("token") String token){
+       int n= appUserService.updateApprovedAtToken(token);
+       log.info("int->{}",n);
+       return ResponseEntity.ok().build();
+    }
+
+
+
+    @PostMapping(path="/profile/request")
+    public void RequestProfile(@RequestBody RequestProfile requestProfile){
+        log.info("in controller");
+        String token = UUID.randomUUID().toString();
+        requestProfile.setToken(token);
+        appUserService.saveRequestProfile(requestProfile);
+    }
+
     @PostMapping(path = "/user/save")
     public ResponseEntity<AppUser>saveUser(
         @RequestBody AppUser appUser
@@ -105,6 +125,7 @@ public class AppUserController {
                 AppUser appUser = appUserService.getAppUser(username);
                 String access_token = JWT.create()
                 .withSubject(appUser.getEmail())
+                //2 months -> 87602
                 .withExpiresAt(new Date(System.currentTimeMillis()+87602*60*1000))
                 .withIssuer(request.getRequestURI().toString())
                 .withClaim("roles", appUser.getRoles().stream().

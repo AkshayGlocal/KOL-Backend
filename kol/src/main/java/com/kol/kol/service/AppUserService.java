@@ -3,6 +3,7 @@ package com.kol.kol.service;
 import java.util.List;
 
 import com.kol.kol.model.AppUser;
+import com.kol.kol.model.RequestProfile;
 import com.kol.kol.model.Role;
 
 public interface AppUserService {
@@ -13,4 +14,8 @@ public interface AppUserService {
     AppUser getAppUser(String email);
     // TODO implement Pageable to optimize
     List<AppUser> getAppUsers();
+    RequestProfile saveRequestProfile(RequestProfile requestProfile);
+    int updateApprovedAtToken (String token);
+
+
 }

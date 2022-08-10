@@ -18,9 +18,7 @@ import lombok.NoArgsConstructor;
 @Data 
 @NoArgsConstructor 
 @AllArgsConstructor
-public class AppUser {
-
-    
+public class AppUser {    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -29,7 +27,4 @@ public class AppUser {
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
-
-
-    
 }

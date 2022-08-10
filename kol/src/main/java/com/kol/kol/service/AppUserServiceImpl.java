@@ -1,5 +1,6 @@
 package com.kol.kol.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,12 +17,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.kol.kol.model.AppUser;
+import com.kol.kol.model.RequestProfile;
 import com.kol.kol.model.Role;
 import com.kol.kol.repo.AppUserRepo;
+import com.kol.kol.repo.RequestProfileRepo;
 import com.kol.kol.repo.RoleRepo;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice.Local;
 
 
 @Service
@@ -35,7 +39,17 @@ public class AppUserServiceImpl implements AppUserService,UserDetailsService{
     private final AppUserRepo appUserRepo;
     private final RoleRepo roleRepo;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final RequestProfileRepo requestProfileRepo;
 
+    @Override
+    public int updateApprovedAtToken(String token) {
+        return requestProfileRepo.updateApprovedAt(token, LocalDateTime.now());
+    }
+    @Override
+    public RequestProfile saveRequestProfile(RequestProfile requestProfile) {
+        log.info("KolProfileID-> "+requestProfile.getKolProfileId()+" saved");
+        return requestProfileRepo.save(requestProfile);
+    }
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AppUser appUser = appUserRepo.findByEmail(email);
@@ -87,6 +101,10 @@ public class AppUserServiceImpl implements AppUserService,UserDetailsService{
         log.info("fetching all users");
         return appUserRepo.findAll();
     }
+
+    
+
+  
 
     
     
