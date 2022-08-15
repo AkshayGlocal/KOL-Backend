@@ -72,6 +72,16 @@
 			<artifactId>java-jwt</artifactId>
 			<version>3.18.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.impossibl.pgjdbc-ng</groupId>
+			<artifactId>pgjdbc-ng</artifactId>
+			<version>0.8.9</version>
+		</dependency>
 	</dependencies>
 
 	<build>
