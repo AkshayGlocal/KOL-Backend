@@ -41,6 +41,11 @@ public class AppUserServiceImpl implements AppUserService,UserDetailsService{
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RequestProfileRepo requestProfileRepo;
 
+
+    @Override
+    public RequestProfile getRequestProfileProvidedToken(String token) {
+        return requestProfileRepo.findByToken(token);
+    }
     @Override
     public int updateApprovedAtToken(String token) {
         return requestProfileRepo.updateApprovedAt(token, LocalDateTime.now());
@@ -100,12 +105,6 @@ public class AppUserServiceImpl implements AppUserService,UserDetailsService{
     public List<AppUser> getAppUsers() {
         log.info("fetching all users");
         return appUserRepo.findAll();
-    }
-
-    
-
-  
-
-    
+    }    
     
 }

@@ -2,6 +2,7 @@ package com.kol.kol.api;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -10,12 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
+import org.springframework.http.codec.ServerSentEvent;
 import javax.management.RuntimeErrorException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,6 +44,7 @@ import com.kol.kol.service.AppUserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -50,18 +53,35 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
+
 @CrossOrigin
 @RequestMapping(path="/api/v1")
 public class AppUserController {
+
     private final AppUserService appUserService;
-    
+
+    private List<String> request_profile = new ArrayList<>();
+
+
+    public AppUserController(AppUserService appUserService){
+        this.appUserService= appUserService;
+    }
+
+
     @GetMapping(path = "/users")
     public ResponseEntity<List<AppUser>>getUsers(){
         return ResponseEntity.ok().body(
             appUserService.getAppUsers()
         );
     }
+    // @GetMapping(path="/approve",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    // public Flux<?> ApproveRequestProfile(@RequestParam("token") String token){
+    //    int n= appUserService.updateApprovedAtToken(token);
+    //    log.info("int->{} approved and stored in the DB",n);
+    //    RequestProfile requestProfile = appUserService.getRequestProfileProvidedToken(token);
+    //    return Flux.interval(Duration.ofSeconds(1))
+    //                 .map(e-> requestProfile+" from sse");
+    // }
     @GetMapping(path="/approve")
     public ResponseEntity<?> ApproveRequestProfile(@RequestParam("token") String token){
        int n= appUserService.updateApprovedAtToken(token);
@@ -69,8 +89,26 @@ public class AppUserController {
        return ResponseEntity.ok().build();
     }
 
+    @PostMapping(path="/profile/approved")
+    public void ProfileApprovedDetails(@RequestBody String kolProfileId){
+        log.info("In approved controller kolProfileId-> {} ",kolProfileId);
+        request_profile.add(kolProfileId);
+
+    }
+
+    @GetMapping(path="/sse")
+    public Flux<ServerSentEvent<List<String>>> getAllRequestProfile() {
+        List<String> messages = request_profile;
+       if (request_profile.size()>0) {
+            return Flux.interval(Duration.ofSeconds(1)).map(sequence -> ServerSentEvent.<List<String>>builder()
+                    .id(String.valueOf(sequence)).event("all-request-profile-event").data(messages).build());
+        }
+            return Flux.interval(Duration.ofSeconds(1)).map(sequence -> ServerSentEvent.<List<String>>builder()
+                    .id(String.valueOf(sequence)).event("all-request-profile-event").data(messages).build());
 
 
+    }
+    
     @PostMapping(path="/profile/request")
     public void RequestProfile(@RequestBody RequestProfile requestProfile){
         log.info("in controller");
