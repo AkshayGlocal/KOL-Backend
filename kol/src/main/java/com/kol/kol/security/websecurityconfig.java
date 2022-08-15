@@ -51,7 +51,7 @@ public class websecurityconfig extends WebSecurityConfigurerAdapter{
         http.cors();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/v1/login","/api/v1/refresh/token",
-                "/api/v1/profile/approved","/api/v1/sse").permitAll();
+                "/api/v1/profile/approved","/api/v1/sse","/api/v1/approve").permitAll();
         http.authorizeRequests().antMatchers("/api/v1/eg").hasAuthority("ROLE_ADMIN");
         http.authorizeRequests().antMatchers("/api/v1/users").hasAuthority("ROLE_ANALYST");
         http.authorizeRequests().anyRequest().authenticated();
