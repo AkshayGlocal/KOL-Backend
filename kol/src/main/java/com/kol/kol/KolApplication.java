@@ -67,6 +67,8 @@ public class KolApplication {
 			dataSource.setHost("localhost");
 			dataSource.setPort(5432);
 			dataSource.setDatabaseName("kol");
+			dataSource.setUser("postgres");
+			dataSource.setPassword("root");
 			
 			PGNotificationListener listener = new PGNotificationListener() {
 	

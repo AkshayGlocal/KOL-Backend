@@ -120,7 +120,7 @@ public class AppUserController {
         // TO DO Send mail
 
         String link = "http://localhost:8080/api/v1/approve?token=" +token;
-        emailSender.send("adominic21@gmail.com", buildEmail(requestProfile.getKolProfileId(), link));
+        emailSender.send("akshay.a@glocalmind.com", buildEmail(requestProfile.getKolProfileId(), link));
 
 
     }
