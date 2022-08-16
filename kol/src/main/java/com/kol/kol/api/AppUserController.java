@@ -91,6 +91,7 @@ public class AppUserController {
        return ResponseEntity.ok().build();
     }
 
+
     @PostMapping(path="/profile/approved")
     public void ProfileApprovedDetails(@RequestBody String kolProfileId){
         log.info("In approved controller kolProfileId-> {} ",kolProfileId);
@@ -110,7 +111,7 @@ public class AppUserController {
 
 
     }
-    
+
     @PostMapping(path="/profile/request")
     public void RequestProfile(@RequestBody RequestProfile requestProfile){
         log.info("in controller");
@@ -135,6 +136,7 @@ public class AppUserController {
             appUserService.saveAppUser(appUser)
         );
     }
+
     @PostMapping(path = "/role/save")
     public ResponseEntity<Role>saveRole(
         @RequestBody Role role
