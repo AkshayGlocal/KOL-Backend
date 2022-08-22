@@ -119,8 +119,12 @@ public class AppUserController {
         appUserService.saveRequestProfile(requestProfile);
         // TO DO Send mail
 
+        AppUser appUser = appUserService.getAppUser(requestProfile.getUsername());
+        String username = appUser.getUsername();
         String link = "http://localhost:8080/api/v1/approve?token=" +token;
-        emailSender.send("akshay.a@glocalmind.com", buildEmail(requestProfile.getKolProfileId(), link));
+        emailSender.send("akshay.a@glocalmind.com", buildEmail(requestProfile.getKolProfileId(), link
+        ,username
+        ));
 
 
     }
@@ -201,7 +205,7 @@ public class AppUserController {
 
         }
     }
-    private String buildEmail(String kol_id, String link) {
+    private String buildEmail(String kol_id, String link,String username) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
@@ -257,7 +261,8 @@ public class AppUserController {
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Kol Profile Id " + kol_id + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Please click on the below link to approve Kol profile: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Approve Now</a> </p></blockquote>\n " +
+                            "<p> HI </p>\n"+
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Requested By: "+username+ "\n"+"<br/>"+" Kol Profile Id :" + kol_id + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Please click on the below link to approve Kol profile: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Approve Now</a> </p></blockquote>\n " +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
