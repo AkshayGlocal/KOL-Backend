@@ -2,6 +2,7 @@ package com.kol.kol.security;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -34,6 +35,8 @@ public class websecurityconfig extends WebSecurityConfigurerAdapter{
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Value("${constants.react_app}")
+    private String react_url;
 
 
     @Override
@@ -76,7 +79,7 @@ public class websecurityconfig extends WebSecurityConfigurerAdapter{
     @Bean
 CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+    configuration.setAllowedOrigins(Arrays.asList(react_url));
     configuration.setAllowCredentials(true);
     configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers","Access-Control-Allow-Origin","Access-Control-Request-Method", "Access-Control-Request-Headers","Origin","Cache-Control", "Content-Type", "Authorization"));
     configuration.setAllowedMethods(Arrays.asList("DELETE", "GET", "POST", "PATCH", "PUT"));
