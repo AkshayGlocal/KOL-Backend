@@ -33,3 +33,17 @@ spring:
           
     protocol: smtp
     test-connection: false
+appsearch:
+  url:
+    "https://kol.ent.us-central1.gcp.cloud.es.io"
+  engine:
+    "bio-homepage-1"
+  key:
+    "search-dt4s16jk5a59aq2ihqp681ci"
+feign:
+  client:
+    config:
+      appsearch:
+        defaultRequestHeaders:
+          Authorization:
+            "Bearer search-dt4s16jk5a59aq2ihqp681ci"

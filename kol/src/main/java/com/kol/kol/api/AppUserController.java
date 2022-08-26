@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.codec.ServerSentEvent;
 import javax.management.RuntimeErrorException;
 import javax.servlet.ServletException;
@@ -126,7 +128,6 @@ public class AppUserController {
         emailSender.send("akshay.a@glocalmind.com", buildEmail(requestProfile.getKolProfileId(), link
         ,username
         ));
-
 
     }
 
