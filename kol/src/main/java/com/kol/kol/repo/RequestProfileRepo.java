@@ -19,6 +19,7 @@ public interface RequestProfileRepo extends JpaRepository<RequestProfile,Long>{
     RequestProfile findByUsername(String username);
     RequestProfile findByToken(String token);
 
+    RequestProfile findByKolProfileId(String kolProfileId);
     @Transactional
     @Modifying
     @Query("UPDATE RequestProfile r "+

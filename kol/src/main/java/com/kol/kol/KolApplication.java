@@ -82,8 +82,6 @@ public class KolApplication {
 						String kol_id = payload_json.get("kol_profile_id").asText();
 						System.out.println("Profile-> "+kol_id);
 						restTemplate.postForEntity("http://localhost:8080/api/v1/profile/approved",kol_id,String.class);
-
-
 						System.out.println("profile approved sent to api");
 
 					}catch(Exception e){

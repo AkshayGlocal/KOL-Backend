@@ -3,6 +3,10 @@ package com.kol.kol.api;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -12,13 +16,15 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Value;
+import net.bytebuddy.asm.Advice;
 import org.springframework.http.codec.ServerSentEvent;
 import javax.management.RuntimeErrorException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -62,6 +68,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(path="/api/v1")
 public class AppUserController {
 
+
+
     private final AppUserService appUserService;
     private final EmailSender emailSender;
 
@@ -69,8 +77,10 @@ public class AppUserController {
     private List<String> request_profile = new ArrayList<>();
 
 
-   
-
+    private String secret_key="2G/pe/o+APbIKXtZHBHem/15fDvr9rLT+5dqvKh/Qz4=";
+    @Value("${constants.url}")
+    //"http://localhost:8080/api/v1/approve?token="
+    private String link;
 
     @GetMapping(path = "/users")
     public ResponseEntity<List<AppUser>>getUsers(){
@@ -87,10 +97,23 @@ public class AppUserController {
     //                 .map(e-> requestProfile+" from sse");
     // }
     @GetMapping(path="/approve")
-    public ResponseEntity<?> ApproveRequestProfile(@RequestParam("token") String token){
-       int n= appUserService.updateApprovedAtToken(token);
-       log.info("int->{}",n);
-       return ResponseEntity.ok().build();
+    public String ApproveRequestProfile(@RequestParam("token") String token){
+       RequestProfile profile = appUserService.getRequestProfiletoken(token);
+        String str = profile.getCreatedAt();
+        LocalDateTime createdAt = LocalDateTime.parse(str, DateTimeFormatter.ISO_DATE_TIME);
+        LocalDateTime time_cal = createdAt.plusHours(12);
+        LocalDateTime.ofInstant(Instant.parse(str), ZoneId.systemDefault());
+        log.info("time cal {}",time_cal);
+        log.info("created at {}",createdAt);
+        log.info("time now {}",LocalDateTime.now().minusHours(5).minusMinutes(30));
+        if(time_cal.isBefore(LocalDateTime.now().minusHours(5).minusMinutes(30))){
+            log.info("link expired");
+            return "<h3>Link Expired</h3>";
+        }else {
+            log.info("Link Valid Profile approved");
+            int n= appUserService.updateApprovedAtToken(token);
+            return "<h3>Profile Approved</h3>";
+        }
     }
 
 
@@ -101,17 +124,29 @@ public class AppUserController {
 
     }
 
+    public List<String> re(){
+        List<String> messages = request_profile;
+        for(String s:messages){
+            RequestProfile profile = appUserService.getRequestProfile(s);
+            LocalDateTime approved_time = profile.getApprovedAt();
+            if(approved_time.plusHours(12).isBefore(LocalDateTime.now())){
+                messages.remove(s);
+                return messages;
+            }
+        }
+        return messages;
+    }
     @GetMapping(path="/sse")
     public Flux<ServerSentEvent<List<String>>> getAllRequestProfile() {
-        List<String> messages = request_profile;
-       if (request_profile.size()>0) {
+//        for(String s:request_profile){
+//            RequestProfile profile = appUserService.getRequestProfile(s);
+//            LocalDateTime approved_time = profile.getApprovedAt();
+//            if(approved_time.plusMinutes(1).isBefore(LocalDateTime.now())){
+//                request_profile.remove(profile.getKolProfileId());
+//            }
+//        }
             return Flux.interval(Duration.ofSeconds(1)).map(sequence -> ServerSentEvent.<List<String>>builder()
-                    .id(String.valueOf(sequence)).event("all-request-profile-event").data(messages).build());
-        }
-            return Flux.interval(Duration.ofSeconds(1)).map(sequence -> ServerSentEvent.<List<String>>builder()
-                    .id(String.valueOf(sequence)).event("all-request-profile-event").data(messages).build());
-
-
+                    .id(String.valueOf(sequence)).event("all-request-profile-event").data(re()).build());
     }
 
     @PostMapping(path="/profile/request")
@@ -124,10 +159,13 @@ public class AppUserController {
 
         AppUser appUser = appUserService.getAppUser(requestProfile.getUsername());
         String username = appUser.getUsername();
-        String link = "http://localhost:8080/api/v1/approve?token=" +token;
-        emailSender.send("akshay.a@glocalmind.com", buildEmail(requestProfile.getKolProfileId(), link
+
+        String send_link = link+token;
+        emailSender.send("akshay.a@glocalmind.com", buildEmail(requestProfile.getKolProfileId(), send_link
         ,username
         ));
+
+
 
     }
 
@@ -171,7 +209,7 @@ public class AppUserController {
         if(authorizationHeader !=null && authorizationHeader.startsWith("Bearer ")){
             try {
                 String refresh_token=authorizationHeader.substring("Bearer ".length());
-                Algorithm algorithm = Algorithm.HMAC256("2G/pe/o+APbIKXtZHBHem/15fDvr9rLT+5dqvKh/Qz4=".getBytes());
+                Algorithm algorithm = Algorithm.HMAC256(secret_key.getBytes());
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refresh_token);
                 String username = decodedJWT.getSubject();
@@ -179,7 +217,7 @@ public class AppUserController {
                 String access_token = JWT.create()
                 .withSubject(appUser.getEmail())
                 //2 months -> 87602
-                .withExpiresAt(new Date(System.currentTimeMillis()+87602*60*1000))
+                .withExpiresAt(new Date(System.currentTimeMillis()+ 87602L *60*1000))
                 .withIssuer(request.getRequestURI().toString())
                 .withClaim("roles", appUser.getRoles().stream().
                 map(Role::getName).collect(Collectors.toList()))
@@ -264,8 +302,8 @@ public class AppUserController {
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
-                            "<p> HI </p>\n"+
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Requested By: "+username+ "\n"+"<br/>"+" Kol Profile Id :" + kol_id + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Please click on the below link to approve Kol profile: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Approve Now</a> </p></blockquote>\n " +
+//                            "<p> HI </p>\n"+
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Requested By: "+username+ "\n"+"<br/>"+" Kol Profile Id :" + kol_id + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Please click on the below link to approve Kol profile: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Approve Now</a> </p><p>Link is valid for 12 hours</p></blockquote>\n " +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +

@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,6 +34,8 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 @Slf4j
 public class CustomAuthorizationfilter extends OncePerRequestFilter{
 
+    private String secret_key="2G/pe/o+APbIKXtZHBHem/15fDvr9rLT+5dqvKh/Qz4=";
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, 
     HttpServletResponse response, FilterChain filterChain)
@@ -54,7 +57,7 @@ public class CustomAuthorizationfilter extends OncePerRequestFilter{
             if(authorizationHeader !=null && authorizationHeader.startsWith("Bearer ")){
                 try {
                     String token=authorizationHeader.substring("Bearer ".length());
-                    Algorithm algorithm = Algorithm.HMAC256("2G/pe/o+APbIKXtZHBHem/15fDvr9rLT+5dqvKh/Qz4=".getBytes());
+                    Algorithm algorithm = Algorithm.HMAC256(secret_key.getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
                     String username = decodedJWT.getSubject();
