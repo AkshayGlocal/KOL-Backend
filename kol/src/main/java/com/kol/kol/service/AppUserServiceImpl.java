@@ -46,10 +46,22 @@ public class AppUserServiceImpl implements AppUserService,UserDetailsService{
     public RequestProfile getRequestProfileProvidedToken(String token) {
         return requestProfileRepo.findByToken(token);
     }
+
+    @Override
+    public RequestProfile getRequestProfile(String kolid) {
+        return  requestProfileRepo.findByKolProfileId(kolid);
+    }
+
     @Override
     public int updateApprovedAtToken(String token) {
         return requestProfileRepo.updateApprovedAt(token, LocalDateTime.now());
     }
+
+    @Override
+    public RequestProfile getRequestProfiletoken(String token) {
+        return requestProfileRepo.findByToken(token);
+    }
+
     @Override
     public RequestProfile saveRequestProfile(RequestProfile requestProfile) {
         log.info("KolProfileID-> "+requestProfile.getKolProfileId()+" saved");

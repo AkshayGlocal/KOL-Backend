@@ -21,7 +21,6 @@ spring:
           auth: true
           starttls:
             enable: true
-          
     protocol: smtp
     test-connection: false
 

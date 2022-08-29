@@ -37,6 +37,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 
     private final AuthenticationManager authenticationManager;
+    private String secret_key="2G/pe/o+APbIKXtZHBHem/15fDvr9rLT+5dqvKh/Qz4=";
 
     public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -58,7 +59,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authentication) throws IOException, ServletException {
             User user = (User)authentication.getPrincipal();
-            Algorithm algorithm = Algorithm.HMAC256("2G/pe/o+APbIKXtZHBHem/15fDvr9rLT+5dqvKh/Qz4=".getBytes());
+            Algorithm algorithm = Algorithm.HMAC256(secret_key.getBytes());
             String access_token = JWT.create()
                 .withSubject(user.getUsername())
                 //10080 -> 1 week

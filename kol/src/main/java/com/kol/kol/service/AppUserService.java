@@ -16,7 +16,10 @@ public interface AppUserService {
     List<AppUser> getAppUsers();
     RequestProfile saveRequestProfile(RequestProfile requestProfile);
     RequestProfile getRequestProfileProvidedToken(String token);
+
+    RequestProfile getRequestProfile(String kolid);
     int updateApprovedAtToken (String token);
 
+    RequestProfile getRequestProfiletoken(String token);
 
 }
