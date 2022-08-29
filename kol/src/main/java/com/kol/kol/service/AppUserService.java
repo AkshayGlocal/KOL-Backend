@@ -22,4 +22,6 @@ public interface AppUserService {
 
     RequestProfile getRequestProfiletoken(String token);
 
+    void deleteRequestProfileByKOLID(String KolProfileId);
+
 }

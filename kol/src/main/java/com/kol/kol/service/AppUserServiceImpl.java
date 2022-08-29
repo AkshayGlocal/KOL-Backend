@@ -63,6 +63,11 @@ public class AppUserServiceImpl implements AppUserService,UserDetailsService{
     }
 
     @Override
+    public void deleteRequestProfileByKOLID(String KolProfileId) {
+        requestProfileRepo.deleteByKolProfileId(KolProfileId);
+    }
+
+    @Override
     public RequestProfile saveRequestProfile(RequestProfile requestProfile) {
         log.info("KolProfileID-> "+requestProfile.getKolProfileId()+" saved");
         return requestProfileRepo.save(requestProfile);

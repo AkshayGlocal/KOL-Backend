@@ -108,6 +108,7 @@ public class AppUserController {
         log.info("time now {}",LocalDateTime.now().minusHours(5).minusMinutes(30));
         if(time_cal.isBefore(LocalDateTime.now().minusHours(5).minusMinutes(30))){
             log.info("link expired");
+            appUserService.deleteRequestProfileByKOLID(profile.getKolProfileId());
             return "<h3>Link Expired</h3>";
         }else {
             log.info("Link Valid Profile approved");
@@ -131,6 +132,7 @@ public class AppUserController {
             LocalDateTime approved_time = profile.getApprovedAt();
             if(approved_time.plusHours(12).isBefore(LocalDateTime.now())){
                 messages.remove(s);
+                appUserService.deleteRequestProfileByKOLID(s);
                 return messages;
             }
         }
