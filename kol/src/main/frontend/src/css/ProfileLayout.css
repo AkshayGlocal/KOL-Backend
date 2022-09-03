@@ -1,0 +1,36 @@
+.back-button{
+    background-color:lightseagreen;
+    width: 6rem;
+    border-radius: 8px;
+    height: 2.5rem; 
+    cursor: pointer;
+    position: fixed;
+    top:5.5rem;
+    margin-left: 1rem;
+}
+.layout-back-container button{
+    text-decoration: none;
+    background:none;
+    color: white;
+    letter-spacing: 5px;
+    border-radius: 8px;
+    font-size: 1.4rem;
+    text-align: center;
+    margin-left: 5px;
+}
+.layout-outer-container{
+    margin-left: 2vw;
+    margin-right: 2vw;
+    margin-top:9vh;
+    
+}
+.image-profile-container{
+    display: grid;
+    grid-template-columns: 1.5fr 5fr;
+}
+.image-container{ 
+    margin-top: 4vh;
+    margin-right: 10px;
+    margin-left: 1.2rem;
+    border-right:1px solid grey;
+}

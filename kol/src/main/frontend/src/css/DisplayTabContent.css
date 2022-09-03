@@ -1,0 +1,18 @@
+.diplay-order{
+    
+    margin-left: 5px;
+}
+.numbering{
+    color: red;
+    font-size: 1.2rem;
+}
+.numbering-two{
+    display: inline;
+}
+.display-tab-content{
+    border-bottom: 1px solid gold;
+}
+.conference{
+   width:100vw;
+}
+
