@@ -4,9 +4,6 @@ server:
     include-binding-errors: always
 
 spring:
-  mvc:
-    pathmatch:
-      matching-strategy: ant-path-matcher
   profiles:
     active:
       dev
