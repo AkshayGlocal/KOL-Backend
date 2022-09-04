@@ -1,1 +1,4 @@
 .idea
+kol/src/main/frontend/node_modules/**
+kol/node/node_modules/**
+kol/sr/node/node_modules/npm/.travis.yml

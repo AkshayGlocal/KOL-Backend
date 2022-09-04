@@ -4,15 +4,15 @@ server:
     include-binding-errors: always
 spring:
   datasource:
-    password: root
-    url: jdbc:postgresql://localhost:5432/kol
+    password: postgres
+    url: jdbc:postgresql://database-1.c0mjkg3tywic.us-east-2.rds.amazonaws.com:5432/kol
     username: postgres
-    host_name: localhost
+    host_name: database-1.c0mjkg3tywic.us-east-2.rds.amazonaws.com
     database_name: kol
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
