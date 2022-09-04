@@ -4,7 +4,7 @@ node{
 	
 	try{
 		stage('Github clone'){
-				git credentialsId: 'bb62fa2a-7c13-440f-82a0-afb662b39d71',
+				git credentialsId: 'github-pass',
 				 url: 'https://github.com/AkshayGlocal/KOL-Backend.git',
 					branch: 'master'
 			}
