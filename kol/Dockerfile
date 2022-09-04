@@ -10,7 +10,7 @@ RUN mvn clean install -DskipTests
 
 #Docker build stage
 
-FROM amazoncorretto:11-alphine3.13
+FROM amazoncorretto:11
 
 COPY --from=build /opt/app/target/*.jar app.jar
 
@@ -18,4 +18,4 @@ ENV PORT 8081
 
 EXPOSE $PORT
 
-ENTRYPOINT ["java","-jar","-Xmx1024M","-Dserver.port=${PORT}","app.jar"]
+ENTRYPOINT ["java","-jar","-Xmx1024M","-Dserver.port=${PORT}","-Dspring.profiles.active=prod","app.jar"]
