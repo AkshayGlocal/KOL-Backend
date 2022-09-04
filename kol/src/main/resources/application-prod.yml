@@ -4,12 +4,11 @@ server:
     include-binding-errors: always
 spring:
   datasource:
-    password: postgres
-    url: jdbc:postgresql://database-1.c0mjkg3tywic.us-east-2.rds.amazonaws.com:5432/kol
+    password: Shiv#12345
+    url: jdbc:postgresql://flask-app-databasebackend.cgmlyvc8kk7s.eu-central-1.rds.amazonaws.com:5432/kol_db_aks
     username: postgres
-    host_name: database-1.c0mjkg3tywic.us-east-2.rds.amazonaws.com
-    database_name: kol
-
+    host_name: flask-app-databasebackend.cgmlyvc8kk7s.eu-central-1.rds.amazonaws.com
+    database_name: kol_db_aks
   jpa:
     hibernate:
       ddl-auto: create

@@ -10,4 +10,5 @@ import com.kol.kol.model.AppUser;
 @Repository
 public interface AppUserRepo extends JpaRepository<AppUser,Long>{
     AppUser findByEmail(String email);
+
 }

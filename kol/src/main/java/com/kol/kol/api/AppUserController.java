@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.auth0.jwt.JWT;
@@ -69,9 +70,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class AppUserController {
 
 
-
     private final AppUserService appUserService;
     private final EmailSender emailSender;
+
 
 
     private List<String> request_profile = new ArrayList<>();
@@ -79,8 +80,10 @@ public class AppUserController {
 
     private String secret_key="2G/pe/o+APbIKXtZHBHem/15fDvr9rLT+5dqvKh/Qz4=";
     @Value("${constants.url}")
-    //"http://localhost:8080/api/v1/approve?token="
+    //"http://localhost:8080/
     private String link;
+
+//    /api/v1/approve?token=
 
     @GetMapping(path = "/users")
     public ResponseEntity<List<AppUser>>getUsers(){
@@ -113,17 +116,18 @@ public class AppUserController {
         }else {
             log.info("Link Valid Profile approved");
             int n= appUserService.updateApprovedAtToken(token);
+            request_profile.add(profile.getKolProfileId());
             return "<h3>Profile Approved</h3>";
         }
     }
 
 
-    @PostMapping(path="/profile/approved")
-    public void ProfileApprovedDetails(@RequestBody String kolProfileId){
-        log.info("In approved controller kolProfileId-> {} ",kolProfileId);
-        request_profile.add(kolProfileId);
-
-    }
+//    @PostMapping(path="/profile/approved")
+//    public void ProfileApprovedDetails(@RequestBody String kolProfileId){
+//        log.info("In approved controller kolProfileId-> {} ",kolProfileId);
+//        request_profile.add(kolProfileId);
+//
+//    }
 
     public List<String> re(){
         List<String> messages = request_profile;
@@ -162,12 +166,10 @@ public class AppUserController {
         AppUser appUser = appUserService.getAppUser(requestProfile.getUsername());
         String username = appUser.getUsername();
 
-        String send_link = link+token;
+        String send_link = link+"/api/v1/approve?token="+token;
         emailSender.send("akshay.a@glocalmind.com", buildEmail(requestProfile.getKolProfileId(), send_link
         ,username
         ));
-
-
 
     }
 
