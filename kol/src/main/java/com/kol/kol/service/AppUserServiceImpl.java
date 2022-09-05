@@ -108,7 +108,7 @@ public class AppUserServiceImpl implements AppUserService,UserDetailsService{
         AppUser appUser = appUserRepo.findByEmail(email);
         Role role = roleRepo.findByName(roleName);
         log.info("role-> {} added to user-> {}",roleName,email);
-        appUser.getRoles().add(role);        
+        appUser.getRoles().add(role);
     }
 
     @Override
