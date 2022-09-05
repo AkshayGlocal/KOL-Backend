@@ -47,7 +47,8 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<scope>annotationProcessor</scope>
+			<scope>provided</scope>
+			<!-- <scope>annotationProcessor</scope> -->
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
