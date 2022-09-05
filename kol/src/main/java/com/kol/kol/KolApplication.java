@@ -58,52 +58,53 @@ public class KolApplication {
 			appUserService.addRoleToAppUser("deepak.b@glocalmind.com", "ROLE_ADMIN");
 	 		appUserService.addRoleToAppUser("johnsmith@glocalmind.com", "ROLE_ANALYST");
 
-			ResourceDatabasePopulator triggerPopulator = new ResourceDatabasePopulator(false, false, StandardCharsets.UTF_8.toString(),
-			 new ClassPathResource("triggers.sql"));
-			triggerPopulator.setSeparator("//");
-			triggerPopulator.execute(datasource);
+		// 	ResourceDatabasePopulator triggerPopulator = new ResourceDatabasePopulator(false, false, StandardCharsets.UTF_8.toString(),
+		// 	 new ClassPathResource("triggers.sql"));
+		// 	triggerPopulator.setSeparator("//");
+		// 	triggerPopulator.execute(datasource);
 
-			PGDataSource dataSource = new PGDataSource();
-			dataSource.setHost("localhost");
-			dataSource.setPort(5432);
-			dataSource.setDatabaseName("kol");
-			dataSource.setUser("postgres");
-			dataSource.setPassword("root");
+		// 	PGDataSource dataSource = new PGDataSource();
+		// 	dataSource.setHost("localhost");
+		// 	dataSource.setPort(5432);
+		// 	dataSource.setDatabaseName("kol");
+		// 	dataSource.setUser("postgres");
+		// 	dataSource.setPassword("root");
 			
-			PGNotificationListener listener = new PGNotificationListener() {
+		// 	PGNotificationListener listener = new PGNotificationListener() {
 	
-				@Override
-				public void notification(int processId, String channelName, String payload) {
-					System.out.println("notifications: " + payload);
-					ObjectMapper mapper = new ObjectMapper();
+		// 		@Override
+		// 		public void notification(int processId, String channelName, String payload) {
+		// 			System.out.println("notifications: " + payload);
+		// 			ObjectMapper mapper = new ObjectMapper();
 					
-					try{
-						JsonNode payload_json = mapper.readTree(payload);
-						String kol_id = payload_json.get("kol_profile_id").asText();
-						System.out.println("Profile-> "+kol_id);
-						restTemplate.postForEntity("http://localhost:8080/api/v1/profile/approved",kol_id,String.class);
-						System.out.println("profile approved sent to api");
+		// 			try{
+		// 				JsonNode payload_json = mapper.readTree(payload);
+		// 				String kol_id = payload_json.get("kol_profile_id").asText();
+		// 				System.out.println("Profile-> "+kol_id);
+		// 				restTemplate.postForEntity("http://localhost:8080/api/v1/profile/approved",kol_id,String.class);
+		// 				System.out.println("profile approved sent to api");
 
-					}catch(Exception e){
-						System.out.println(e);
-					}
+		// 			}catch(Exception e){
+		// 				System.out.println(e);
+		// 			}
 
-				}
-			};
+		// 		}
+		// 	};
 			
-			try (PGConnection connection = (PGConnection) dataSource.getConnection()){
-				Statement statement = connection.createStatement();
-				statement.execute("LISTEN update_notification");
-				statement.close();
-				connection.addNotificationListener(listener);
+		// 	try (PGConnection connection = (PGConnection) dataSource.getConnection()){
+		// 		Statement statement = connection.createStatement();
+		// 		statement.execute("LISTEN update_notification");
+		// 		statement.close();
+		// 		connection.addNotificationListener(listener);
 	
-				while (true){ }
-			} catch (Exception e) {
-				System.err.println(e);
-			}
+		// 		while (true){ }
+		// 	} catch (Exception e) {
+		// 		System.err.println(e);
+		// 	}
 	
 	
-		};
-	}
+		// };
+	};
 	
+}
 }
