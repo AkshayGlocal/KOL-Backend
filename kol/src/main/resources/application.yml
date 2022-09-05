@@ -6,7 +6,7 @@ server:
 spring:
   profiles:
     active:
-      dev
+      prod
   mail:
     default-encoding: UTF-8
     host: smtp.gmail.com
